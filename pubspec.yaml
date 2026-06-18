@@ -1,0 +1,58 @@
+name: uv_player
+description: UV Player - A liquid glass multimedia player with dynamic theming.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+
+  # State Management
+  provider: ^6.1.1
+
+  # Audio
+  just_audio: ^0.9.36
+  audio_service: ^0.18.12
+  rxdart: ^0.27.7
+
+  # Video
+  media_kit: ^1.1.10+1
+  media_kit_video: ^1.2.4
+  media_kit_libs_video: ^1.0.4
+
+  # Storage
+  shared_preferences: ^2.2.2
+  path_provider: ^2.1.2
+
+  # Permissions
+  permission_handler: ^11.3.0
+
+  # File Picker
+  file_picker: ^6.1.1
+
+  # UI
+  shimmer: ^3.0.0
+  flutter_blurhash: ^0.7.0
+  cached_network_image: ^3.3.1
+  flutter_svg: ^2.0.9
+
+  # Utils
+  intl: ^0.19.0
+  url_launcher: ^6.2.2
+  uuid: ^4.2.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/icons/
