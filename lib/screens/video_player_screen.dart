@@ -22,7 +22,7 @@ class VideoPlayerScreen extends StatefulWidget {
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   late final Player _player;
-  late final VideoController _controller;
+  late final kit_video.VideoController _controller;
   bool _showControls = true;
   Timer? _hideTimer;
   double _playbackSpeed = 1.0;
@@ -32,7 +32,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
   void initState() {
     super.initState();
     _player = Player();
-    _controller = VideoController(_player);
+    _controller = kit_video.VideoController(_player);
     _initPlayer();
   }
 
