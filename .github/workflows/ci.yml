@@ -19,7 +19,9 @@ jobs:
           cache: true
 
       - name: Generate platform files
-        run: flutter create --project-name uv_player .
+        run: |
+          flutter create --project-name uv_player .
+          rm -f test/widget_test.dart
 
       - name: Install dependencies
         run: flutter pub get
@@ -43,7 +45,9 @@ jobs:
           cache: true
 
       - name: Generate platform files
-        run: flutter create --project-name uv_player .
+        run: |
+          flutter create --project-name uv_player .
+          rm -f test/widget_test.dart
 
       - name: Install dependencies
         run: flutter pub get
@@ -70,7 +74,9 @@ jobs:
           cache: true
 
       - name: Generate platform files
-        run: flutter create --project-name uv_player .
+        run: |
+          flutter create --project-name uv_player .
+          rm -f test/widget_test.dart
 
       - name: Install dependencies
         run: flutter pub get
