@@ -44,6 +44,18 @@ jobs:
           channel: 'stable'
           cache: true
 
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          api-level: 36
+          build-tools: '36.0.0'
+
       - name: Generate platform files
         run: |
           flutter create --project-name uv_player .
