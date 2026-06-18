@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:media_kit_video/media_kit_video.dart' hide Video;
+import 'package:media_kit_video/media_kit_video.dart' as kit_video;
 import '../models/video.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
@@ -68,9 +68,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
         children: [
           // Video
           Center(
-            child: Video(
+            child: kit_video.Video(
               controller: _controller,
-              controls: NoVideoControls,
+              controls: kit_video.NoVideoControls,
             ),
           ),
 
@@ -358,7 +358,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
     final currentIndex = speeds.indexOf(_playbackSpeed);
     final nextIndex = (currentIndex + 1) % speeds.length;
     setState(() => _playbackSpeed = speeds[nextIndex]);
-    _player.setSpeed(_playbackSpeed);
+    _player.setRate(_playbackSpeed);
   }
 
   String _formatDuration(Duration d) {
