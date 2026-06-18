@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/playlist_provider.dart';
-import '../providers/music_provider.dart';
 import '../models/playlist.dart';
 import '../widgets/glass_card.dart';
 
@@ -55,7 +54,7 @@ class PlaylistScreen extends StatelessWidget {
                   Text(
                     'Tap + to create one',
                     style: TextStyle(
-                      color: isDark ? Colors.white30 : Colors.black30,
+                      color: isDark ? Colors.white30 : Colors.black26,
                       fontSize: 13,
                     ),
                   ),

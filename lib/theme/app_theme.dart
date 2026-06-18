@@ -26,7 +26,7 @@ class AppTheme {
         secondary: accent.withOpacity(0.7),
         surface: Colors.white.withOpacity(0.7),
       ),
-      cardTheme: CardThemeData(
+      cardTheme: CardTheme(
         color: Colors.white.withOpacity(0.5),
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -74,7 +74,7 @@ class AppTheme {
         secondary: accent.withOpacity(0.7),
         surface: Colors.white.withOpacity(0.08),
       ),
-      cardTheme: CardThemeData(
+      cardTheme: CardTheme(
         color: Colors.white.withOpacity(0.08),
         elevation: 0,
         shape: RoundedRectangleBorder(

@@ -114,7 +114,7 @@ class MusicTab extends StatelessWidget {
                             Text(
                               'Check permissions or add music files',
                               style: TextStyle(
-                                color: isDark ? Colors.white30 : Colors.black30,
+                                color: isDark ? Colors.white30 : Colors.black26,
                                 fontSize: 13,
                               ),
                             ),

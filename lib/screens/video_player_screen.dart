@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:media_kit/media_kit.dart';
-import 'package:media_kit_video/media_kit_video.dart';
+import 'package:media_kit_video/media_kit_video.dart' hide Video;
 import '../models/video.dart';
 
 class VideoPlayerScreen extends StatefulWidget {
@@ -189,7 +188,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
           // Play/Pause
           StreamBuilder<bool>(
-            stream: _player.playingStream,
+            stream: _player.stream.playing,
             builder: (context, snapshot) {
               final playing = snapshot.data ?? false;
               return IconButton(
@@ -242,11 +241,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             children: [
               // Seek Bar
               StreamBuilder<Duration>(
-                stream: _player.positionStream,
+                stream: _player.stream.position,
                 builder: (context, snapshot) {
                   final position = snapshot.data ?? Duration.zero;
                   return StreamBuilder<Duration>(
-                    stream: _player.durationStream,
+                    stream: _player.stream.duration,
                     builder: (context, snapshot) {
                       final duration = snapshot.data ?? Duration.zero;
                       return Row(
@@ -324,7 +323,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                   SizedBox(
                     width: 100,
                     child: StreamBuilder<double>(
-                      stream: _player.volumeStream,
+                      stream: _player.stream.volume,
                       builder: (context, snapshot) {
                         return SliderTheme(
                           data: SliderThemeData(
