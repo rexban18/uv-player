@@ -66,6 +66,8 @@ jobs:
 
       - name: Generate tag
         run: |
+          git config user.email "ci@uvplayer.dev"
+          git config user.name "CI Bot"
           VERSION=$(date +%Y.%m.%d)-${GITHUB_SHA::7}
           git tag -a "v$VERSION" -m "Release $VERSION"
           git push origin "v$VERSION"
