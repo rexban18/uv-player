@@ -20,9 +20,8 @@ dependencies:
   rxdart: ^0.27.7
 
   # Video
-  media_kit: ^1.1.11
-  media_kit_video: ^2.0.0
-  media_kit_libs_video: ^1.0.5
+  video_player: ^2.8.6
+  chewie: ^1.8.1
 
   # Storage
   shared_preferences: ^2.2.2
