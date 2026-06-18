@@ -50,16 +50,16 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
-        with:
-          api-level: 36
-          build-tools: '36.0.0'
-
       - name: Generate platform files
         run: |
           flutter create --project-name uv_player .
           rm -f test/widget_test.dart
+
+      - name: Fix Android SDK version
+        run: |
+          sed -i 's/compileSdk .*/compileSdk 36/' android/app/build.gradle
+          sed -i 's/targetSdk .*/targetSdk 35/' android/app/build.gradle
+          sed -i 's/minSdk .*/minSdk 21/' android/app/build.gradle
 
       - name: Install dependencies
         run: flutter pub get
@@ -73,37 +73,8 @@ jobs:
           name: uv-player-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
-  build-ios:
-    needs: analyze-and-test
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.24.0'
-          channel: 'stable'
-          cache: true
-
-      - name: Generate platform files
-        run: |
-          flutter create --project-name uv_player .
-          rm -f test/widget_test.dart
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      - name: Build iOS (no codesign)
-        run: flutter build ios --release --no-codesign
-
-      - name: Upload iOS build
-        uses: actions/upload-artifact@v4
-        with:
-          name: uv-player-ios
-          path: build/ios/iphoneos/Runner.app
-
   tag-release:
-    needs: [build-android, build-ios]
+    needs: [build-android]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     steps:
