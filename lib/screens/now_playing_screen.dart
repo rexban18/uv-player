@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../providers/music_provider.dart';
 import '../models/song.dart';
-import '../main.dart';
 
 class NowPlayingScreen extends StatelessWidget {
   const NowPlayingScreen({super.key});
@@ -177,11 +176,11 @@ class NowPlayingScreen extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 32),
                   child: StreamBuilder<Duration>(
-                    stream: audioHandler.positionStream,
+                    stream: musicProvider.positionStream,
                     builder: (context, snapshot) {
                       final position = snapshot.data ?? Duration.zero;
                       return StreamBuilder<Duration?>(
-                        stream: audioHandler.durationStream,
+                        stream: musicProvider.durationStream,
                         builder: (context, snapshot) {
                           final duration = snapshot.data ?? Duration.zero;
                           return Column(
@@ -270,7 +269,7 @@ class NowPlayingScreen extends StatelessWidget {
 
                       // Play/Pause
                       StreamBuilder<bool>(
-                        stream: audioHandler.playingStream,
+                        stream: musicProvider.playingStream,
                         builder: (context, snapshot) {
                           final playing = snapshot.data ?? false;
                           return GestureDetector(
@@ -314,10 +313,10 @@ class NowPlayingScreen extends StatelessWidget {
                       // Repeat
                       IconButton(
                         icon: Icon(
-                          audioHandler.repeatMode == LoopMode.one
+                          musicProvider.repeatMode == LoopMode.one
                               ? Icons.repeat_one
                               : Icons.repeat,
-                          color: audioHandler.repeatMode != LoopMode.off
+                          color: musicProvider.repeatMode != LoopMode.off
                               ? accent
                               : (isDark ? Colors.white54 : Colors.black54),
                           size: 24,

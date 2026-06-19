@@ -10,7 +10,10 @@ import 'providers/music_provider.dart';
 import 'providers/video_provider.dart';
 import 'providers/playlist_provider.dart';
 
-late UVAudioHandler audioHandler;
+UVAudioHandler? _audioHandlerInstance;
+bool audioServiceReady = false;
+
+UVAudioHandler? get audioHandler => _audioHandlerInstance;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,20 +28,6 @@ void main() async {
     statusBarIconBrightness: Brightness.light,
   ));
 
-  audioHandler = await AudioService.init(
-    builder: () => UVAudioHandler(),
-    config: const AudioServiceConfig(
-      androidNotificationChannelId: 'com.uvplayer.app.audio.channel',
-      androidNotificationChannelName: 'UV Player',
-      androidNotificationChannelDescription: 'Controls for UV Player',
-      androidNotificationOngoing: true,
-      androidStopForegroundOnPause: true,
-      androidNotificationIcon: 'mipmap/ic_launcher',
-      artDownscaleWidth: 300,
-      artDownscaleHeight: 300,
-    ),
-  );
-
   runApp(
     MultiProvider(
       providers: [
@@ -50,4 +39,28 @@ void main() async {
       child: const UVPlayerApp(),
     ),
   );
+
+  _initAudioService();
+}
+
+Future<void> _initAudioService() async {
+  try {
+    _audioHandlerInstance = await AudioService.init(
+      builder: () => UVAudioHandler(),
+      config: const AudioServiceConfig(
+        androidNotificationChannelId: 'com.uvplayer.app.audio.channel',
+        androidNotificationChannelName: 'UV Player',
+        androidNotificationChannelDescription: 'Controls for UV Player',
+        androidNotificationOngoing: true,
+        androidStopForegroundOnPause: true,
+        androidNotificationIcon: 'mipmap/ic_launcher',
+        artDownscaleWidth: 300,
+        artDownscaleHeight: 300,
+      ),
+    );
+    audioServiceReady = true;
+  } catch (e) {
+    debugPrint('AudioService init failed: $e');
+    audioServiceReady = false;
+  }
 }

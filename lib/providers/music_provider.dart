@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:just_audio/just_audio.dart';
 import 'dart:convert';
 import '../models/song.dart';
 import '../main.dart';
@@ -26,15 +27,24 @@ class MusicProvider extends ChangeNotifier {
   List<Song> get favorites => _favorites;
   bool get isLoading => _isLoading;
   String get searchQuery => _searchQuery;
-  Song? get currentSong => audioHandler.currentSong != null
-      ? _findSongById(audioHandler.currentSong!.id)
-      : null;
-  bool get isPlaying => audioHandler.isPlaying;
-  bool get isShuffle => audioHandler.isShuffle;
+  Song? get currentSong {
+    final handler = audioHandler;
+    if (handler == null) return null;
+    return handler.currentSong != null
+        ? _findSongById(handler.currentSong!.id)
+        : null;
+  }
 
-  Stream<bool> get playingStream => audioHandler.playingStream;
-  Stream<Duration> get positionStream => audioHandler.positionStream;
-  Stream<Duration?> get durationStream => audioHandler.durationStream;
+  bool get isPlaying => audioHandler?.isPlaying ?? false;
+  bool get isShuffle => audioHandler?.isShuffle ?? false;
+  LoopMode get repeatMode => audioHandler?.repeatMode ?? LoopMode.off;
+
+  Stream<bool> get playingStream =>
+      audioHandler?.playingStream ?? Stream.value(false);
+  Stream<Duration> get positionStream =>
+      audioHandler?.positionStream ?? Stream.value(Duration.zero);
+  Stream<Duration?> get durationStream =>
+      audioHandler?.durationStream ?? Stream.value(null);
 
   Song? _findSongById(String id) {
     try {
@@ -97,6 +107,9 @@ class MusicProvider extends ChangeNotifier {
   }
 
   Future<void> playSong(Song song) async {
+    final handler = audioHandler;
+    if (handler == null) return;
+
     final mediaItems = _songs.map((s) => MediaItemData(
       id: s.id,
       title: s.title,
@@ -108,11 +121,14 @@ class MusicProvider extends ChangeNotifier {
     )).toList();
 
     final index = _songs.indexWhere((s) => s.id == song.id);
-    await audioHandler.loadPlaylist(mediaItems, startIndex: index >= 0 ? index : 0);
+    await handler.loadPlaylist(mediaItems, startIndex: index >= 0 ? index : 0);
     notifyListeners();
   }
 
   Future<void> playFromFavorites(Song song) async {
+    final handler = audioHandler;
+    if (handler == null) return;
+
     final mediaItems = _favorites.map((s) => MediaItemData(
       id: s.id,
       title: s.title,
@@ -124,45 +140,52 @@ class MusicProvider extends ChangeNotifier {
     )).toList();
 
     final index = _favorites.indexWhere((s) => s.id == song.id);
-    await audioHandler.loadPlaylist(mediaItems, startIndex: index >= 0 ? index : 0);
+    await handler.loadPlaylist(mediaItems, startIndex: index >= 0 ? index : 0);
     notifyListeners();
   }
 
   Future<void> togglePlay() async {
+    final handler = audioHandler;
+    if (handler == null) return;
+
     if (isPlaying) {
-      await audioHandler.pause();
+      await handler.pause();
     } else {
-      await audioHandler.play();
+      await handler.play();
     }
     notifyListeners();
   }
 
   Future<void> next() async {
-    await audioHandler.skipToNext();
+    final handler = audioHandler;
+    if (handler == null) return;
+    await handler.skipToNext();
     notifyListeners();
   }
 
   Future<void> previous() async {
-    await audioHandler.skipToPrevious();
+    final handler = audioHandler;
+    if (handler == null) return;
+    await handler.skipToPrevious();
     notifyListeners();
   }
 
   void toggleShuffle() {
-    audioHandler.toggleShuffle();
+    audioHandler?.toggleShuffle();
     notifyListeners();
   }
 
   void toggleRepeat() {
-    audioHandler.toggleRepeat();
+    audioHandler?.toggleRepeat();
     notifyListeners();
   }
 
   Future<void> seek(Duration position) async {
-    await audioHandler.seek(position);
+    await audioHandler?.seek(position);
   }
 
   Future<void> setVolume(double volume) async {
-    await audioHandler.setVolume(volume);
+    await audioHandler?.setVolume(volume);
   }
 
   Future<void> refresh() async {
