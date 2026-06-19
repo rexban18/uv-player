@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../providers/music_provider.dart';
+import '../models/song.dart';
 import '../main.dart';
 
 class NowPlayingScreen extends StatelessWidget {
@@ -405,8 +407,7 @@ class NowPlayingScreen extends StatelessWidget {
 
   void _shareSong(Song song) {
     Share.share(
-      'Check out this song: ${song.title} by ${song.artist}\n'
-      'Played on UV Player',
+      'Check out this song: ${song.title} by ${song.artist}\nPlayed on UV Player',
       subject: song.title,
     );
   }

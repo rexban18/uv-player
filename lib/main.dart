@@ -10,7 +10,7 @@ import 'providers/music_provider.dart';
 import 'providers/video_provider.dart';
 import 'providers/playlist_provider.dart';
 
-late AudioHandler audioHandler;
+late UVAudioHandler audioHandler;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,7 +26,7 @@ void main() async {
   ));
 
   audioHandler = await AudioService.init(
-    builder: () => AudioHandler(),
+    builder: () => UVAudioHandler(),
     config: const AudioServiceConfig(
       androidNotificationChannelId: 'com.uvplayer.app.audio.channel',
       androidNotificationChannelName: 'UV Player',

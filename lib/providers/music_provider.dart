@@ -25,13 +25,23 @@ class MusicProvider extends ChangeNotifier {
   List<Song> get favorites => _favorites;
   bool get isLoading => _isLoading;
   String get searchQuery => _searchQuery;
-  Song? get currentSong => audioHandler.currentSong;
+  Song? get currentSong => audioHandler.currentSong != null
+      ? _findSongById(audioHandler.currentSong!.id)
+      : null;
   bool get isPlaying => audioHandler.isPlaying;
   bool get isShuffle => audioHandler.isShuffle;
 
   Stream<bool> get playingStream => audioHandler.playingStream;
   Stream<Duration> get positionStream => audioHandler.positionStream;
   Stream<Duration?> get durationStream => audioHandler.durationStream;
+
+  Song? _findSongById(String id) {
+    try {
+      return _songs.firstWhere((s) => s.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
 
   Future<void> loadSongs() async {
     _isLoading = true;
@@ -92,6 +102,7 @@ class MusicProvider extends ChangeNotifier {
       artist: s.artist,
       album: s.album,
       artUri: s.artUri,
+      filePath: s.filePath,
       duration: s.duration,
     )).toList();
 
@@ -107,6 +118,7 @@ class MusicProvider extends ChangeNotifier {
       artist: s.artist,
       album: s.album,
       artUri: s.artUri,
+      filePath: s.filePath,
       duration: s.duration,
     )).toList();
 

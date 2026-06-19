@@ -333,7 +333,7 @@ class SettingsScreen extends StatelessWidget {
                     'Version 1.0.0',
                     style: TextStyle(
                       fontSize: 12,
-                      color: isDark ? Colors.white30 : Colors.black30,
+                      color: isDark ? Colors.white30 : Colors.black26,
                     ),
                   ),
                 ],

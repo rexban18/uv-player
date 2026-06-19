@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:rxdart/rxdart.dart';
 
 class MediaItemData {
   final String id;
@@ -10,6 +8,7 @@ class MediaItemData {
   final String artist;
   final String album;
   final String artUri;
+  final String filePath;
   final Duration duration;
 
   MediaItemData({
@@ -18,11 +17,12 @@ class MediaItemData {
     required this.artist,
     required this.album,
     required this.artUri,
+    required this.filePath,
     required this.duration,
   });
 }
 
-class AudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
+class UVAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   final AudioPlayer _player = AudioPlayer();
   final List<MediaItemData> _playlist = [];
   int _currentIndex = -1;
@@ -35,7 +35,7 @@ class AudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   bool get isShuffle => _isShuffle;
   LoopMode get repeatMode => _repeatMode;
 
-  AudioHandler() {
+  UVAudioHandler() {
     _init();
   }
 
