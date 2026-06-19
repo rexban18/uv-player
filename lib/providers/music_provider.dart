@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/song.dart';
-import '../services/audio_player_service.dart';
+import '../main.dart';
 import '../services/media_scanner.dart';
 
 class MusicProvider extends ChangeNotifier {
@@ -11,7 +11,6 @@ class MusicProvider extends ChangeNotifier {
   List<Song> _favorites = [];
   bool _isLoading = false;
   String _searchQuery = '';
-  final AudioPlayerService _audioService = AudioPlayerService();
 
   List<Song> get songs {
     if (_searchQuery.isEmpty) return _songs;
@@ -26,13 +25,13 @@ class MusicProvider extends ChangeNotifier {
   List<Song> get favorites => _favorites;
   bool get isLoading => _isLoading;
   String get searchQuery => _searchQuery;
-  AudioPlayerService get audioService => _audioService;
-  Song? get currentSong => _audioService.currentSong;
-  bool get isPlaying => _audioService.isPlaying;
+  Song? get currentSong => audioHandler.currentSong;
+  bool get isPlaying => audioHandler.isPlaying;
+  bool get isShuffle => audioHandler.isShuffle;
 
-  Stream<bool> get playingStream => _audioService.playingStream;
-  Stream<Duration> get positionStream => _audioService.positionStream;
-  Stream<Duration?> get durationStream => _audioService.durationStream;
+  Stream<bool> get playingStream => audioHandler.playingStream;
+  Stream<Duration> get positionStream => audioHandler.positionStream;
+  Stream<Duration?> get durationStream => audioHandler.durationStream;
 
   Future<void> loadSongs() async {
     _isLoading = true;
@@ -87,46 +86,70 @@ class MusicProvider extends ChangeNotifier {
   }
 
   Future<void> playSong(Song song) async {
-    await _audioService.playSong(song, playlist: _songs);
+    final mediaItems = _songs.map((s) => MediaItemData(
+      id: s.id,
+      title: s.title,
+      artist: s.artist,
+      album: s.album,
+      artUri: s.artUri,
+      duration: s.duration,
+    )).toList();
+
+    final index = _songs.indexWhere((s) => s.id == song.id);
+    await audioHandler.loadPlaylist(mediaItems, startIndex: index >= 0 ? index : 0);
     notifyListeners();
   }
 
   Future<void> playFromFavorites(Song song) async {
-    await _audioService.playSong(song, playlist: _favorites);
+    final mediaItems = _favorites.map((s) => MediaItemData(
+      id: s.id,
+      title: s.title,
+      artist: s.artist,
+      album: s.album,
+      artUri: s.artUri,
+      duration: s.duration,
+    )).toList();
+
+    final index = _favorites.indexWhere((s) => s.id == song.id);
+    await audioHandler.loadPlaylist(mediaItems, startIndex: index >= 0 ? index : 0);
     notifyListeners();
   }
 
   Future<void> togglePlay() async {
-    await _audioService.togglePlay();
+    if (isPlaying) {
+      await audioHandler.pause();
+    } else {
+      await audioHandler.play();
+    }
     notifyListeners();
   }
 
   Future<void> next() async {
-    await _audioService.next();
+    await audioHandler.skipToNext();
     notifyListeners();
   }
 
   Future<void> previous() async {
-    await _audioService.previous();
+    await audioHandler.skipToPrevious();
     notifyListeners();
   }
 
   void toggleShuffle() {
-    _audioService.toggleShuffle();
+    audioHandler.toggleShuffle();
     notifyListeners();
   }
 
   void toggleRepeat() {
-    _audioService.toggleRepeat();
+    audioHandler.toggleRepeat();
     notifyListeners();
   }
 
   Future<void> seek(Duration position) async {
-    await _audioService.seek(position);
+    await audioHandler.seek(position);
   }
 
   Future<void> setVolume(double volume) async {
-    await _audioService.setVolume(volume);
+    await audioHandler.setVolume(volume);
   }
 
   Future<void> refresh() async {

@@ -44,6 +44,7 @@ dependencies:
   url_launcher: ^6.2.2
   uuid: ^4.2.1
   package_info_plus: ^8.0.0
+  share_plus: ^9.0.0
 
 dev_dependencies:
   flutter_test:
