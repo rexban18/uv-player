@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
@@ -35,9 +36,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
 
   Future<void> _initPlayer() async {
     try {
-      _videoController = VideoPlayerController.file(
-        await _getVideoFile(),
-      );
+      if (kIsWeb) {
+        _videoController = VideoPlayerController.networkUrl(
+          Uri.parse(widget.video.filePath),
+        );
+      } else {
+        _videoController = VideoPlayerController.networkUrl(
+          Uri.parse(widget.video.filePath),
+        );
+      }
 
       await _videoController.initialize();
 

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/video_provider.dart';
@@ -18,7 +18,6 @@ class VideoTab extends StatelessWidget {
     return SafeArea(
       child: Column(
         children: [
-          // Header
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
             child: Row(
@@ -42,8 +41,6 @@ class VideoTab extends StatelessWidget {
               ],
             ),
           ),
-
-          // Search Bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             child: GlassCard(
@@ -72,8 +69,6 @@ class VideoTab extends StatelessWidget {
               ),
             ),
           ),
-
-          // Video Grid
           Expanded(
             child: videoProvider.isLoading
                 ? Center(
@@ -93,7 +88,9 @@ class VideoTab extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'No videos found',
+                              kIsWeb
+                                  ? 'Web player - load videos via URL'
+                                  : 'No videos found',
                               style: TextStyle(
                                 color: isDark ? Colors.white54 : Colors.black54,
                                 fontSize: 16,
@@ -163,7 +160,6 @@ class _VideoTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Thumbnail
           Expanded(
             child: Container(
               width: double.infinity,
@@ -178,23 +174,15 @@ class _VideoTile extends StatelessWidget {
                   ],
                 ),
               ),
-              child: video.thumbnailPath.isNotEmpty &&
-                      File(video.thumbnailPath).existsSync()
-                  ? ClipRRect(
-                      borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(20),
-                      ),
-                      child: Image.file(
-                        File(video.thumbnailPath),
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => _defaultThumbnail(),
-                      ),
-                    )
-                  : _defaultThumbnail(),
+              child: const Center(
+                child: Icon(
+                  Icons.play_circle_outline_rounded,
+                  size: 40,
+                  color: Colors.white54,
+                ),
+              ),
             ),
           ),
-
-          // Info
           Padding(
             padding: const EdgeInsets.all(10),
             child: Column(
@@ -222,16 +210,6 @@ class _VideoTile extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _defaultThumbnail() {
-    return const Center(
-      child: Icon(
-        Icons.play_circle_outline_rounded,
-        size: 40,
-        color: Colors.white54,
       ),
     );
   }

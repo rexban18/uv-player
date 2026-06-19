@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/music_provider.dart';
@@ -19,7 +19,6 @@ class MusicTab extends StatelessWidget {
     return SafeArea(
       child: Column(
         children: [
-          // Header
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
             child: Row(
@@ -37,8 +36,6 @@ class MusicTab extends StatelessWidget {
               ],
             ),
           ),
-
-          // Search Bar
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             child: GlassCard(
@@ -67,8 +64,6 @@ class MusicTab extends StatelessWidget {
               ),
             ),
           ),
-
-          // Song Count
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
             child: Row(
@@ -83,8 +78,6 @@ class MusicTab extends StatelessWidget {
               ],
             ),
           ),
-
-          // Song List
           Expanded(
             child: musicProvider.isLoading
                 ? Center(
@@ -104,7 +97,9 @@ class MusicTab extends StatelessWidget {
                             ),
                             const SizedBox(height: 16),
                             Text(
-                              'No songs found',
+                              kIsWeb
+                                  ? 'Web player - load songs via URL'
+                                  : 'No songs found',
                               style: TextStyle(
                                 color: isDark ? Colors.white54 : Colors.black54,
                                 fontSize: 16,
@@ -112,7 +107,9 @@ class MusicTab extends StatelessWidget {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Check permissions or add music files',
+                              kIsWeb
+                                  ? 'Use the player to stream audio'
+                                  : 'Check permissions or add music files',
                               style: TextStyle(
                                 color: isDark ? Colors.white30 : Colors.black26,
                                 fontSize: 13,
@@ -184,7 +181,6 @@ class _SongTile extends StatelessWidget {
       accentColor: isCurrent ? accent : null,
       child: Row(
         children: [
-          // Album Art
           Container(
             width: 50,
             height: 50,
@@ -199,27 +195,13 @@ class _SongTile extends StatelessWidget {
                       ],
               ),
             ),
-            child: song.artUri.isNotEmpty && File(song.artUri).existsSync()
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.file(
-                      File(song.artUri),
-                      fit: BoxFit.cover,
-                      errorBuilder: (_, __, ___) => Icon(
-                        Icons.music_note,
-                        color: isCurrent ? Colors.white : (isDark ? Colors.white54 : Colors.black54),
-                      ),
-                    ),
-                  )
-                : Icon(
-                    Icons.music_note,
-                    color: isCurrent ? Colors.white : (isDark ? Colors.white54 : Colors.black54),
-                    size: 28,
-                  ),
+            child: Icon(
+              Icons.music_note,
+              color: isCurrent ? Colors.white : (isDark ? Colors.white54 : Colors.black54),
+              size: 28,
+            ),
           ),
           const SizedBox(width: 14),
-
-          // Song Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,8 +231,6 @@ class _SongTile extends StatelessWidget {
               ],
             ),
           ),
-
-          // Duration
           Text(
             _formatDuration(song.duration),
             style: TextStyle(
@@ -259,8 +239,6 @@ class _SongTile extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-
-          // Favorite
           GestureDetector(
             onTap: onFavorite,
             child: Icon(

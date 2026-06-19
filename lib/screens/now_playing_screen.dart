@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'dart:ui';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:provider/provider.dart';
@@ -33,12 +33,8 @@ class NowPlayingScreen extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           // Blurred Background
-          if (song.artUri.isNotEmpty && File(song.artUri).existsSync())
-            Image.file(
-              File(song.artUri),
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => Container(),
-            ),
+          if (!kIsWeb && song.artUri.isNotEmpty)
+            Container(),
           BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 50, sigmaY: 50),
             child: Container(
@@ -127,13 +123,7 @@ class NowPlayingScreen extends StatelessWidget {
                   ),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(24),
-                    child: song.artUri.isNotEmpty && File(song.artUri).existsSync()
-                        ? Image.file(
-                            File(song.artUri),
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) => _defaultArt(accent, isDark),
-                          )
-                        : _defaultArt(accent, isDark),
+                    child: _defaultArt(accent, isDark),
                   ),
                 ),
 

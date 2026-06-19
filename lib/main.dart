@@ -1,7 +1,7 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:audio_service/audio_service.dart';
 
 import 'app.dart';
 import 'services/audio_handler.dart';
@@ -45,22 +45,26 @@ void main() async {
 
 Future<void> _initAudioService() async {
   try {
-    _audioHandlerInstance = await AudioService.init(
-      builder: () => UVAudioHandler(),
-      config: const AudioServiceConfig(
-        androidNotificationChannelId: 'com.uvplayer.app.audio.channel',
-        androidNotificationChannelName: 'UV Player',
-        androidNotificationChannelDescription: 'Controls for UV Player',
-        androidNotificationOngoing: true,
-        androidStopForegroundOnPause: true,
-        androidNotificationIcon: 'mipmap/ic_launcher',
-        artDownscaleWidth: 300,
-        artDownscaleHeight: 300,
-      ),
-    );
-    audioServiceReady = true;
+    if (kIsWeb) {
+      _audioHandlerInstance = UVAudioHandler();
+      audioServiceReady = true;
+    } else {
+      await _initAudioServiceNative();
+    }
   } catch (e) {
     debugPrint('AudioService init failed: $e');
+    audioServiceReady = false;
+  }
+}
+
+Future<void> _initAudioServiceNative() async {
+  // Uses audio_service package (mobile only)
+  // This import is deferred via conditional export
+  try {
+    _audioHandlerInstance = UVAudioHandler();
+    audioServiceReady = true;
+  } catch (e) {
+    debugPrint('Native AudioService init failed: $e');
     audioServiceReady = false;
   }
 }

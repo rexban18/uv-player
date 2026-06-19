@@ -41,7 +41,11 @@ class AudioPlayerService {
     }
 
     try {
-      await _player.setFilePath(song.filePath);
+      if (song.filePath.startsWith('http')) {
+        await _player.setUrl(song.filePath);
+      } else {
+        await _player.setFilePath(song.filePath);
+      }
       await _player.play();
     } catch (e) {
       // Handle playback error
