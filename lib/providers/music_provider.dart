@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/song.dart';
 import '../main.dart';
+import '../services/audio_handler.dart';
 import '../services/media_scanner.dart';
 
 class MusicProvider extends ChangeNotifier {
